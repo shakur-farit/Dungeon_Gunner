@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class HelperUtilities
-// Start is called before the first frame update
 {
     /// <summary>
     /// Empty string debug check
@@ -55,4 +54,5 @@ public static class HelperUtilities
 
         return error;
     }
+
 }

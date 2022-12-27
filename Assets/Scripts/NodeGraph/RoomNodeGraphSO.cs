@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 [CreateAssetMenu(fileName = "RoomNodeGraph", menuName = "Scriptable Objects/Dungeon/Room Node Graph")]
 public class RoomNodeGraphSO : ScriptableObject
 {
@@ -13,9 +12,8 @@ public class RoomNodeGraphSO : ScriptableObject
     private void Awake()
     {
         LoadRoomNodeDictionary();
+
     }
-
-
 
     /// <summary>
     /// Load the room node dictionary from the room node list.
@@ -33,6 +31,22 @@ public class RoomNodeGraphSO : ScriptableObject
 
 
     /// <summary>
+    /// Get room node by roomNodeType
+    /// </summary>
+    public RoomNodeSO GetRoomNode(RoomNodeTypeSO roomNodeType)
+    {
+        foreach (RoomNodeSO node in roomNodeList)
+        {
+            if (node.roomNodeType == roomNodeType)
+            {
+                return node;
+            }
+        }
+        return null;
+    }
+
+
+    /// <summary>
     /// Get room node by room nodeID
     /// </summary>
     public RoomNodeSO GetRoomNode(string roomNodeID)
@@ -44,15 +58,25 @@ public class RoomNodeGraphSO : ScriptableObject
         return null;
     }
 
+    /// <summary>
+    /// Get child room nodes for supplied parent room node
+    /// </summary>
+    public IEnumerable<RoomNodeSO> GetChildRoomNodes(RoomNodeSO parentRoomNode)
+    {
+        foreach (string childNodeID in parentRoomNode.childRoomNodeIDList)
+        {
+            yield return GetRoomNode(childNodeID);
+        }
+    }
 
-    #region
 
+    #region Editor Code
+
+    // The following code should only run in the Unity Editor
 #if UNITY_EDITOR
 
     [HideInInspector] public RoomNodeSO roomNodeToDrawLineFrom = null;
     [HideInInspector] public Vector2 linePosition;
-
-
 
     // Repopulate node dictionary every time a change is made in the editor
     public void OnValidate()
@@ -68,5 +92,6 @@ public class RoomNodeGraphSO : ScriptableObject
 
 #endif
 
-    #endregion
+    #endregion Editor Code
+
 }

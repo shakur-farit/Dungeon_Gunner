@@ -14,13 +14,12 @@ public class RoomNodeSO : ScriptableObject
 
     #region Editor Code
 
+    // the following code should only be run in the Unity Editor
 #if UNITY_EDITOR
 
     [HideInInspector] public Rect rect;
     [HideInInspector] public bool isLeftClickDragging = false;
     [HideInInspector] public bool isSelected = false;
-
-
 
     /// <summary>
     /// Initialise node
@@ -36,8 +35,6 @@ public class RoomNodeSO : ScriptableObject
         // Load room node type list
         roomNodeTypeList = GameResources.Instance.roomNodeTypeList;
     }
-
-
 
     /// <summary>
     /// Draw node with the nodestyle
@@ -58,7 +55,7 @@ public class RoomNodeSO : ScriptableObject
         }
         else
         {
-            //Display a popup using the RoomNodeType name values that can be selected from )default to the currently set roomNodeType)
+            // Display a popup using the RoomNodeType name values that can be selected from (default to the currently set roomNodeType)
             int selected = roomNodeTypeList.list.FindIndex(x => x == roomNodeType);
 
             int selection = EditorGUILayout.Popup("", selected, GetRoomNodeTypesToDisplay());
@@ -66,9 +63,7 @@ public class RoomNodeSO : ScriptableObject
             roomNodeType = roomNodeTypeList.list[selection];
 
             // If the room type selection has changed making child connections potentially invalid
-            if (roomNodeTypeList.list[selected].isCorridor && !roomNodeTypeList.list[selection].isCorridor || !roomNodeTypeList.list[selected].isCorridor 
-                && roomNodeTypeList.list[selection].isCorridor || !roomNodeTypeList.list[selected].isBossRoom &&
-                roomNodeTypeList.list[selection].isBossRoom)
+            if (roomNodeTypeList.list[selected].isCorridor && !roomNodeTypeList.list[selection].isCorridor || !roomNodeTypeList.list[selected].isCorridor && roomNodeTypeList.list[selection].isCorridor || !roomNodeTypeList.list[selected].isBossRoom && roomNodeTypeList.list[selection].isBossRoom)
             {
                 // If a room node type has been changed and it already has children then delete the parent child links since we need to revalidate any
                 if (childRoomNodeIDList.Count > 0)
@@ -93,14 +88,10 @@ public class RoomNodeSO : ScriptableObject
         }
 
         if (EditorGUI.EndChangeCheck())
-        {
             EditorUtility.SetDirty(this);
-        }
 
         GUILayout.EndArea();
     }
-
-
 
     /// <summary>
     /// Populate a string array with the room node types to display that can be selected
@@ -119,8 +110,6 @@ public class RoomNodeSO : ScriptableObject
 
         return roomArray;
     }
-
-
 
     /// <summary>
     /// Process events for the node
@@ -149,8 +138,6 @@ public class RoomNodeSO : ScriptableObject
         }
     }
 
-
-
     /// Process mouse down events
     /// </summary>
     private void ProcessMouseDownEvent(Event currentEvent)
@@ -167,14 +154,12 @@ public class RoomNodeSO : ScriptableObject
         }
     }
 
-
-
     /// <summary>
     /// Process left click down event
     /// </summary>
     private void ProcessLeftClickDownEvent()
     {
-        //Selection.activeObject = this;
+        Selection.activeObject = this;
 
         // Toggle node selection
         if (isSelected == true)
@@ -187,8 +172,6 @@ public class RoomNodeSO : ScriptableObject
         }
     }
 
-
-
     /// <summary>
     /// Process right click down
     ///
@@ -196,8 +179,6 @@ public class RoomNodeSO : ScriptableObject
     {
         roomNodeGraph.SetNodeToDrawConnectionLineFrom(this, currentEvent.mousePosition);
     }
-
-
 
     /// <summary>
     /// Process mouse up event
@@ -211,8 +192,6 @@ public class RoomNodeSO : ScriptableObject
         }
     }
 
-
-
     /// <summary>
     /// Process left click up event
     /// </summary>
@@ -223,8 +202,6 @@ public class RoomNodeSO : ScriptableObject
             isLeftClickDragging = false;
         }
     }
-
-
 
     /// <summary>
     /// Process mouse drag event
@@ -238,8 +215,6 @@ public class RoomNodeSO : ScriptableObject
         }
     }
 
-
-
     /// <summary>
     /// Process left mouse drag event
     /// </summary>
@@ -251,8 +226,6 @@ public class RoomNodeSO : ScriptableObject
         GUI.changed = true;
     }
 
-
-
     /// <summary>
     /// Drag node
     /// </summary>
@@ -261,8 +234,6 @@ public class RoomNodeSO : ScriptableObject
         rect.position += delta;
         EditorUtility.SetDirty(this);
     }
-
-
 
     /// <summary>
     /// Add childID to the node (returns true if the node has been added, false otherwise)
@@ -279,10 +250,8 @@ public class RoomNodeSO : ScriptableObject
         return false;
     }
 
-
-
-    ///<summary>
-    /// Chek the child node can be validly added to the parent node - return true if it can otherwise return false
+    /// <summary>
+    /// Check the child node can be validly added to the parent node - return true if it can otherwise return false
     /// </summary>
     public bool IsChildRoomValid(string childID)
     {
@@ -341,7 +310,6 @@ public class RoomNodeSO : ScriptableObject
         return true;
     }
 
-
     /// <summary>
     /// Add parentID to the node (returns true if the node has been added, false otherwise)
     /// </summary>
@@ -350,7 +318,6 @@ public class RoomNodeSO : ScriptableObject
         parentRoomNodeIDList.Add(parentID);
         return true;
     }
-
 
     /// <summary>
     /// Remove childID from the node (returns true if the node has been removed, false otherwise)
@@ -366,8 +333,6 @@ public class RoomNodeSO : ScriptableObject
         return false;
     }
 
-
-
     /// <summary>
     /// Remove parentID from the node (returns true if the node has been remove, false otherwise)
     /// </summary>
@@ -381,7 +346,6 @@ public class RoomNodeSO : ScriptableObject
         }
         return false;
     }
-   
 
 #endif
 
